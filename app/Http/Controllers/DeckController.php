@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeckRequest;
+use App\Models\Deck;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,26 +31,30 @@ class DeckController extends Controller
 
         $user->decks()->create($request->all());
 
-        return redirect('deck.index');
+        return redirect()->route('deck.index');
     }
 
     public function show(Request $request): Renderable
     {
-        return view('index');
+        return view('deck.show');
     }
 
-    public function edit(Request $request): Renderable
+    public function edit(Deck $deck): Renderable
     {
-        return view('index');
+        return view('deck.edit', compact('deck'));
     }
 
-    public function update(Request $request): RedirectResponse
+    public function update(DeckRequest $request, Deck $deck): RedirectResponse
     {
-        return redirect('index');
+        $deck->update($request->all());
+        
+        return redirect()->route('deck.index')->with('toast', [['type' => 'success', 'message' => __('Deck updated')]]);
     }
 
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Deck $deck): RedirectResponse
     {
-        return redirect('index');
+        $deck->delete();
+
+        return redirect()->route('deck.index')->with('toast', [['type' => 'success', 'message' => __('Deck delete')]]);
     }
 }
