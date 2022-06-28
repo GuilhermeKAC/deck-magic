@@ -7,8 +7,7 @@ use App\Models\Card;
 use App\Models\Deck;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use GuzzleHttp\Client;
 
 class CardDeckController extends Controller
 {
@@ -19,7 +18,12 @@ class CardDeckController extends Controller
 
     public function store(CardDeckRequest $request, Deck $deck): RedirectResponse
     {
-        dd($deck);
+        $client = new Client([
+            'base_uri' => 'https://api.magicthegathering.io/v1/cards'
+        ]);
+
+        $response = $client->request('GET', '?name=Counter');
+        dd($response);
         return redirect()->route('deck.index');
     }
 
