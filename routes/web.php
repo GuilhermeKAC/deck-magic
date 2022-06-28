@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CardController;
+use App\Http\Controllers\CardDeckController;
 use App\Http\Controllers\DeckController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -31,4 +33,20 @@ Route::group(['middleware' => 'auth', 'prefix' => 'deck', 'as' => 'deck.'], stat
     Route::get('{deck}/edit', [DeckController::class, 'edit'])->name('edit');
     Route::put('{deck}', [DeckController::class, 'update'])->name('update');
     Route::delete('{deck}', [DeckController::class, 'destroy'])->name('destroy');
+
+    Route::group(['prefix' => '{deck}/card', 'as' => 'card.'], static function () {
+        Route::get('create', [CardDeckController::class, 'create'])->name('create');
+        Route::post('', [CardDeckController::class, 'store'])->name('store');
+        Route::delete('{card}', [CardDeckController::class, 'destroy'])->name('destroy');
+    });
+});
+
+Route::group(['middleware' => 'auth', 'prefix' => 'card', 'as' => 'card.'], static function () {
+    Route::get('', [CardController::class, 'index'])->name('index');
+    Route::get('create', [CardController::class, 'create'])->name('create');
+    Route::post('', [CardController::class, 'store'])->name('store');
+    Route::get('{card}', [CardController::class, 'show'])->name('show');
+    Route::get('{card}/edit', [CardController::class, 'edit'])->name('edit');
+    Route::put('{card}', [CardController::class, 'update'])->name('update');
+    Route::delete('{card}', [CardController::class, 'destroy'])->name('destroy');
 });

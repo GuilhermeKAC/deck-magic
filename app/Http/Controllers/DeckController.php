@@ -34,9 +34,11 @@ class DeckController extends Controller
         return redirect()->route('deck.index');
     }
 
-    public function show(Request $request): Renderable
+    public function show(Deck $deck): Renderable
     {
-        return view('deck.show');
+        $cards = $deck->cards()->paginate();
+
+        return view('deck.show', compact('cards', 'deck'));
     }
 
     public function edit(Deck $deck): Renderable
