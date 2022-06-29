@@ -19,11 +19,16 @@ class CardDeckController extends Controller
     public function store(CardDeckRequest $request, Deck $deck): RedirectResponse
     {
         $client = new Client([
-            'base_uri' => 'https://api.magicthegathering.io/v1/cards'
+            'base_uri' => 'https://api.magicthegathering.io/v1/'
         ]);
 
-        $response = $client->request('GET', '?name=Counter');
-        dd($response);
+        $response = $client->request('GET', 'cards');
+
+        $body = $response->getBody();
+        $arr_body = json_decode($body);
+
+        dd($arr_body);
+
         return redirect()->route('deck.index');
     }
 
