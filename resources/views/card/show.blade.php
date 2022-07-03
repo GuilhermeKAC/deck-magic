@@ -2,6 +2,6 @@
 
 @section('content')
     <div class="container">
-        
+        {{ dd($cards) }}
     </div>
 @endsection

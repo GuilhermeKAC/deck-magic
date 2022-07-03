@@ -19,17 +19,29 @@ class CardDeckController extends Controller
     public function store(CardDeckRequest $request, Deck $deck): RedirectResponse
     {
         $client = new Client([
-            'base_uri' => 'https://api.magicthegathering.io/v1/'
+            'base_uri' => 'https://api.magicthegathering.io'
         ]);
 
-        $response = $client->request('GET', 'cards');
+        $response = $client->request('GET', '/v1/cards?name=' . $request->input('name'));
+       
+        $array = json_decode($response->getBody()->getContents());
 
-        $body = $response->getBody();
-        $arr_body = json_decode($body);
+        $collection = collect($array->cards);
 
-        dd($arr_body);
+        if ($response->getStatusCode() !== 200 || !$collection->count()) {
+            // TODO: Criar regra caso não encontre carta
+            dd('morri');
+        }
 
-        return redirect()->route('deck.index');
+        $card = Card::firstOrCreate([
+            'name' => $collection->first()->name,
+            'image' => $collection->first()->imageUrl,
+            'description' => $collection->first()->text,
+        ]);
+        
+        $deck->cards()->attach($card);
+
+        return redirect()->route('deck.show', $deck);
     }
 
     public function destroy(Deck $deck, Card $card): RedirectResponse
