@@ -22,6 +22,19 @@
                     </div>
                 </div>
             </div>
-        </div> 
+        </div>
+        <div class="album py-5 bg-white">
+            <div class="container">
+                <div class="row row-cols-1 row-cols-sm-1 row-cols-md-3 g-3">
+                    @foreach ($cards as $card)
+                        <div class="col">
+                            <div class="card" style="width: 15rem">
+                                <img src="{{ $card->image }}" alt="">
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
